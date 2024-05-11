@@ -12,6 +12,7 @@ import {
 } from "../schemas/contactsSchemas.js";
 import validateBody from "../helpers/validateBody.js";
 import { emptyBody } from "../helpers/emptyBody.js";
+
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", getAllContacts);
