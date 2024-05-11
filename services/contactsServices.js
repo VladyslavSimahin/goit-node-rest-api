@@ -2,11 +2,13 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import { nanoid } from "nanoid";
 
-const contactsPath = path.resolve("db", "/contacts.json");
+const contactsPath = path.resolve("db", "contacts.json");
 
 export async function listContacts() {
-  const data = await fs.readFile(`${contactsPath}`, { encoding: "utf-8" });
-  return JSON.parse(data);
+  const contacts = await fs.readFile(`${contactsPath}`, {
+    encoding: "utf-8",
+  });
+  return JSON.parse(contacts);
 }
 function writeContacts(contacts) {
   return fs.writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
