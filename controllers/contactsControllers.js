@@ -1,55 +1,48 @@
-import {
-  listContacts,
-  updateContactById,
-  getContactById,
-  addContact,
-  removeContact,
-} from "../services/contactsServices.js";
-
+import { Contact } from "../schemas/contactsSchemas.js";
 import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res) => {
-  const result = await listContacts();
+  const result = await Contact.find();
   res.json(result);
 };
 
 export const getOneContact = async (req, res) => {
   const { id } = req.params;
-  const result = await getContactById(id);
+  const result = await Contact.findById(id);
+
   if (!result) {
-    throw HttpError(404);
+    return res.status(404).json({ message: HttpError(404).message });
   }
   res.json(result);
 };
 
 export const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const result = await removeContact(id);
+  const result = await Contact.findByIdAndDelete(id);
   if (!result) {
-    throw HttpError(404);
+    res.status(404).json({ message: HttpError(404).message });
   }
   res.json(result);
 };
 
 export const createContact = async (req, res) => {
-  const result = await addContact(
-    req.body.name,
-    req.body.email,
-    req.body.phone
-  );
+  const result = await Contact.create(req.body);
   res.status(201).json(result);
 };
-
 export const updateContact = async (req, res) => {
   const { id } = req.params;
-  if (Object.keys(req.body).length === 0) {
-    return res
-      .status(400)
-      .json({ message: "Body must have at least one field" });
-  }
-  const result = await updateContactById(id, req.body);
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
-    throw HttpError(404);
+    res.status(404).json({ message: HttpError(404).message });
+  }
+  res.json(result);
+};
+
+export const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  if (!result) {
+    res.status(404).json({ message: HttpError(404).message });
   }
   res.json(result);
 };
